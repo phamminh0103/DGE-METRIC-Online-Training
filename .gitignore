@@ -1,0 +1,33 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.run.xml
+*-blx.bib
+
+# Office / backup files
+*.bak
+*.bak[0-9]
+~$*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Participant data - never commit
+pre survey.xlsx
+*participant*email*

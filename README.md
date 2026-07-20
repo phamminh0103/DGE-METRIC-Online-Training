@@ -1,119 +1,108 @@
-# DGE-METRIC Online Training
+# DGE-METRIC Online Training Repository
 
-Finance and Energy-Efficiency Scenarios, Reserve Requirements, and Calibration and Sensitivity Analysis.
+This repository contains materials for the DGE-METRIC Online Training on finance and energy-efficiency scenarios, reserve requirements, and calibration and sensitivity analysis.
 
-This README displays the training agenda from:
+It is structured for hands-on delivery: participants can move from agenda to code, reproduce core exercises, and document outputs in a consistent workflow.
 
-C:/Users/schul/Dropbox/2025_GIZ_Vietnam/Training/Training Slides/Online Training/outreach/DGE-METRIC_Online_Training_Agenda_170726.docx
-
-## Course Overview
+## Training Summary
 
 - Program: GIZ Vietnam | DGE-METRIC Program | Online Module
 - Dates: 22-24 July 2026
 - Time zone: ICT (UTC+7)
-- Format: 5 live sessions (2 morning sessions, 3 afternoon sessions)
-- Total live time: about 15 hours
+- Delivery format: 5 live sessions (2 morning sessions, 3 afternoon sessions)
+- Total live instruction: approximately 15 hours
 
-## Who This Is For
+## Target Audience
 
-Participants who already attended the on-site DGE-METRIC training and now need applied, hands-on practice with calibration, scenario design, interpretation, and policy communication.
+Participants who have completed the on-site DGE-METRIC training and are ready for applied work in:
+- calibration and diagnostics,
+- scenario design and implementation,
+- reserve-requirement analysis, and
+- interpretation and policy communication.
 
 ## Learning Outcomes
 
-After the online module, participants should be able to:
-
-- Navigate the DGE-METRIC repository and trace equations to implementation code.
-- Run a baseline calibration and interpret diagnostics.
-- Design and document finance and energy-efficiency scenarios.
-- Modify calibration inputs and structural parameters.
+By the end of the online training, participants should be able to:
+- Navigate the DGE-METRIC codebase and trace equations to implementation.
+- Run baseline calibration workflows and interpret diagnostics.
+- Build and document finance and energy-efficiency scenarios.
+- Modify calibration inputs and selected structural parameters.
 - Explain reserve-requirement logic (MC = MB) and implementation pathways.
-- Use GitHub Desktop and VS Code for practical model workflows.
+- Use GitHub and VS Code in a practical model-development workflow.
 
-## Agenda At A Glance
+## Session Schedule
 
 | Session | Date | Time (ICT) | Topic | Main Output |
 |---|---|---|---|---|
 | 1 | Wed 22 Jul 2026 | 13:00-17:00 | Finance and energy-efficiency scenario definition | Two completed scenario metadata sheets |
-| 2 | Thu 23 Jul 2026 | 09:00-11:30 | Calibration and scenario hands-on (with Git/GitHub Desktop/VS Code) | Calibration diagnostic note + comparison chart and narrative |
+| 2 | Thu 23 Jul 2026 | 09:00-11:30 | Calibration and scenario hands-on | Calibration diagnostic note + comparison chart and narrative |
 | 3 | Thu 23 Jul 2026 | 13:00-17:00 | Reserve requirements method and implementation planning | MC=MB walkthrough + implementation plan |
 | 4 | Fri 24 Jul 2026 | 09:00-11:30 | Guided open lab on reserve requirements | Completed reserve-requirement analysis note |
-| 5 | Fri 24 Jul 2026 | 13:00-17:00 | Calibration internals, modification, sensitivity, close | Sensitivity-analysis plan + exit outputs |
+| 5 | Fri 24 Jul 2026 | 13:00-17:00 | Calibration internals, modification, sensitivity, and close | Sensitivity-analysis plan + exit outputs |
 
-## Agenda By Day With Code Links
+## Day-to-Code Mapping
 
 ### Day 1 - Wednesday, 22 July 2026
 
-Focus:
+Primary focus:
 - Finance and energy-efficiency scenario definition (Session 1).
 
-Use these folders:
+Relevant repository locations:
 - Main model workflows: [Code/dge-metric-model](Code/dge-metric-model)
 - Equations and calibration scripts: [Code/dge-metric-model/ModFiles](Code/dge-metric-model/ModFiles), [Code/dge-metric-model/Functions](Code/dge-metric-model/Functions)
 - Agenda reference: [Agenda/detailed-agenda.md](Agenda/detailed-agenda.md)
 
 ### Day 2 - Thursday, 23 July 2026
 
-Focus:
+Primary focus:
 - Morning: calibration and scenario hands-on (Session 2).
 - Afternoon: reserve requirements method and implementation planning (Session 3).
 
-Use these folders:
-- Calibration, scenario runs, and debugging: [Code/dge-metric-model](Code/dge-metric-model)
-- Reserve requirements method and training scripts: [Code/reserve-requirements](Code/reserve-requirements)
+Relevant repository locations:
+- Calibration and scenario execution: [Code/dge-metric-model](Code/dge-metric-model)
+- Reserve requirements methods and scripts: [Code/reserve-requirements](Code/reserve-requirements)
 - Reserve outputs and examples: [Code/reserve-requirements/run_outputs](Code/reserve-requirements/run_outputs)
 
 ### Day 3 - Friday, 24 July 2026
 
-Focus:
+Primary focus:
 - Morning: guided open lab on reserve requirements (Session 4).
-- Afternoon: calibration internals, model modification, sensitivity analysis (Session 5).
+- Afternoon: calibration internals, model modification, and sensitivity analysis (Session 5).
 
-Use these folders:
+Relevant repository locations:
 - Reserve-requirement lab work: [Code/reserve-requirements](Code/reserve-requirements)
-- Sensitivity and model modification practice: [Code/dge-metric-model](Code/dge-metric-model)
-- Slides and communication outputs: [slides](slides), [Code/reserve-requirements/Presentation](Code/reserve-requirements/Presentation)
-
-Source agenda document used for this mapping:
-- C:/Users/schul/Downloads/DGE-METRIC_Online_Training_Agenda_170726.docx
+- Model modification and sensitivity practice: [Code/dge-metric-model](Code/dge-metric-model)
+- Communication outputs and presentation assets: [slides](slides), [Code/reserve-requirements/Presentation](Code/reserve-requirements/Presentation)
 
 ## Session Details
 
 ### Session 1 - Wed 22 Jul, 13:00-17:00
 
-Finance scenarios and energy-efficiency scenarios in full detail.
-
 - Welcome, recap, and repository orientation
-- Six-scenario finance matrix and mechanism walkthrough
+- Finance-scenario matrix and mechanism walkthrough
 - Group drafting of finance scenario metadata
-- Energy-efficiency scenario channels and quantified assumptions
+- Energy-efficiency channels and quantified assumptions
 - Group drafting of energy-efficiency scenario metadata
 
 ### Session 2 - Thu 23 Jul, 09:00-11:30
 
-Calibration and scenario execution hands-on.
-
 - 09:00-10:00 recap and troubleshooting
 - 10:00-11:30 technical hands-on
 - Codebase navigation across ModFiles and Functions
-- GitHub Desktop and VS Code workflow
 - Baseline calibration run and diagnostics
 - Debugging common MATLAB/Dynare errors
-- Finance and efficiency scenario runs and comparison outputs
+- Scenario runs and comparison outputs
 
 ### Session 3 - Thu 23 Jul, 13:00-17:00
 
-Reserve requirements method and implementation.
-
 - Policy framing for reserve adequacy
-- Mapping Day 1-2 outputs to reserve analysis inputs
+- Mapping Day 1-2 outputs to reserve-analysis inputs
 - Break-even screening (Step 1)
 - Validation and optimization concepts (Steps 2-3)
 - Implementation mapping into DGE-METRIC structure
 - Group drafting of an implementation plan for one carrier
 
 ### Session 4 - Fri 24 Jul, 09:00-11:30
-
-Guided open lab for reserve-requirement analysis.
 
 - Recap and discussion
 - Group lab work on break-even and validation logic
@@ -122,10 +111,8 @@ Guided open lab for reserve-requirement analysis.
 
 ### Session 5 - Fri 24 Jul, 13:00-17:00
 
-Calibration internals, model modification approach, sensitivity analysis, and close.
-
 - Calibration workflow recap and reliability checks
-- Data inputs vs structural parameters
+- Data inputs versus structural parameters
 - Modification workflow and re-validation process
 - One-at-a-time sensitivity method
 - Group drafting of a sensitivity-analysis plan
@@ -141,12 +128,16 @@ Calibration internals, model modification approach, sensitivity analysis, and cl
 
 ## Prerequisites
 
-- MATLAB and Dynare installed and working
-- Access to the DGE-METRIC repository
-- No pre-reading required
-- Git/GitHub Desktop/VS Code experience not required
+- MATLAB and Dynare installed and operational
+- Access to this repository
+- No mandatory pre-reading
+- Prior Git/GitHub Desktop/VS Code experience is helpful but not required
 
-## Notes
+## Source and Notes
 
+Agenda source used for this README:
+- C:/Users/schul/Downloads/DGE-METRIC_Online_Training_Agenda_170726.docx
+
+Additional notes:
 - Reserve-requirement method examples are instructional and not policy-final outputs.
-- Some institutional support items (for example TA/manual/video follow-up and Octave substitution) remain to be confirmed.
+- Some institutional follow-up items (for example TA/manual/video support and Octave substitution) remain to be confirmed.

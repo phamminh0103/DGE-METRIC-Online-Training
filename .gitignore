@@ -24,6 +24,19 @@ __pycache__/
 *.pyc
 .venv/
 
+# Dynare generated artifacts
+*_results.mat
+*_dynamic.m
+*_static.m
+*_set_auxiliary_variables.m
+*_driver.m
+*_steady_state2.m
+*_optimal_policy_results.mat
+
+# Dynare generated model/output folders
+*/model/
+*/Output/
+
 # OS
 .DS_Store
 Thumbs.db

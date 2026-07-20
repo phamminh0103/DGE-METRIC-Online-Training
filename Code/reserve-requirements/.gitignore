@@ -1,0 +1,23 @@
+# MATLAB autosave and logs
+*.asv
+*.log
+
+# Runtime MATLAB data outputs
+*.mat
+
+# Dynare generated outputs (reproducible)
+ToyModelSOEMC/
+
+# Run artifacts
+run_outputs/
+Presentation/run_outputs/
+
+# LaTeX build byproducts
+Presentation/*.aux
+Presentation/*.fls
+Presentation/*.fdb_latexmk
+Presentation/*.out
+Presentation/*.synctex.gz
+Presentation/*.toc
+Presentation/*.lof
+Presentation/*.lot

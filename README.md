@@ -131,9 +131,20 @@ Relevant repository locations:
 - [Agenda](Agenda)
 - [slides](slides)
 - [worksheets](worksheets)
+- [worksheets/setup](worksheets/setup)
 - [Code](Code)
 - [Code/dge-metric-model](Code/dge-metric-model)
 - [Code/reserve-requirements](Code/reserve-requirements)
+
+## Setup Guide
+
+For participant onboarding, use the GitHub-viewable setup guide:
+
+- [worksheets/setup/GitHub_Copilot_Setup_Guide.md](worksheets/setup/GitHub_Copilot_Setup_Guide.md)
+
+Source document (kept in-repo):
+
+- [worksheets/setup/GitHub_Copilot_Setup_Guide.docx](worksheets/setup/GitHub_Copilot_Setup_Guide.docx)
 
 ## Prerequisites
 

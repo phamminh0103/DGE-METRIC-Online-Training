@@ -6,10 +6,6 @@ Finance & Energy-Efficiency Scenarios, Reserve Requirements, and Calibration & S
 
 Continuing your DGE-METRIC training online — this course picks up directly from the on-site training (Training Days 1–2, and Day 3 if already completed) and moves into applied, hands-on model use. This document expands the course schedule into a block-by-block agenda for each of the five sessions.
 
-**2026-07-13 revision:** each afternoon now goes deep on one topic rather than surveying several. Day 1 PM defines finance and energy-efficiency scenarios in full detail; Day 2 PM covers the reserve-requirement method and how it would be implemented; Day 3 PM covers calibration internals, how to modify them, and sensitivity analysis. To make room for that depth, the Distributed Energy Resources and LNG-to-Hydrogen pathways are out of scope for this iteration (energy-efficiency remains the one fully-worked pathway example); codebase navigation and Git/GitHub Desktop moved from Day 1 PM to Day 2 AM, right before they're needed hands-on; and the closing wrap-up is now a short block at the end of Day 3 PM rather than its own session.
-
-**2026-07-14 revision:** Day 1 now opens with a setup check-in (VS Code, GitHub, an AI coding assistant), and installing these three tools moves from "introduced from scratch on Day 2 AM" to a **prerequisite confirmed before Day 1**. Day 2 AM still teaches full Git/GitHub Desktop and VS Code workflows from scratch — this check-in only confirms the tools are present and open, not that participants already know how to use them. See `../design/decision-log.md` (2026-07-14 entry) for rationale.
-
 # Who this is for
 
 Participants who have already attended the on-site DGE-METRIC training. This course does not repeat introductory macroeconomic or DGE modeling theory — it focuses on using the model independently: calibration, scenario design, interpretation, and policy communication.

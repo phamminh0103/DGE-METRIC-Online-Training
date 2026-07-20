@@ -15,9 +15,9 @@ scenarioGroups = struct();
 
 % Core reference scenarios
 scenarioGroups.Reference = {...
-   % 'Baseline', ...
+   'Baseline', ...
     % 'Baseline_FR_g035'...
-   'NZ',...
+   % 'NZ',...
     };
 
 % Energy-efficiency scenarios
@@ -54,13 +54,8 @@ scenarioGroups.ImportShock = {...
 
 % Select which groups to run.
 % Default group set:
-% activeScenarioGroups = {'Reference', 'EE', 'GF_PDP8', 'GF_NZ'};%, 'NZ_Sensitivity'};
 activeScenarioGroups = {'Reference', 'EE', 'GF_PDP8', 'GF_NZ', 'NZ_Sensitivity', 'ImportShock'};
-% activeScenarioGroups = {'EE', 'GF_PDP8', 'GF_NZ'};
-% activeScenarioGroups = {'Reference'};%, 'EE'};
-% activeScenarioGroups = {'NZ_Sensitivity'};%, 'EE'};
-% activeScenarioGroups = {'Reference', 'ImportShock'};
-activeScenarioGroups = {'GF_NZ'};
+
 % Optional override via environment variable, e.g.:
 %   set DGE_SCENARIO_GROUPS=Reference,GF_NZ
 envGroups = strtrim(getenv('DGE_SCENARIO_GROUPS'));
@@ -265,7 +260,7 @@ for icoScenario = scenarioStart:scenarioEnd
         if lSteadyState
             sSimulation = '5'; %#ok<UNRCH>
         else
-            sSimulation = '20';
+            sSimulation = '5';
         end
         sExoNX = '0'; % exogenous net exports does not work with LOM for foreign assets.
         sCapandTrade = '0';

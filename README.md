@@ -39,6 +39,43 @@ After the online module, participants should be able to:
 | 4 | Fri 24 Jul 2026 | 09:00-11:30 | Guided open lab on reserve requirements | Completed reserve-requirement analysis note |
 | 5 | Fri 24 Jul 2026 | 13:00-17:00 | Calibration internals, modification, sensitivity, close | Sensitivity-analysis plan + exit outputs |
 
+## Agenda By Day With Code Links
+
+### Day 1 - Wednesday, 22 July 2026
+
+Focus:
+- Finance and energy-efficiency scenario definition (Session 1).
+
+Use these folders:
+- Main model workflows: [Code/dge-metric-model](Code/dge-metric-model)
+- Equations and calibration scripts: [Code/dge-metric-model/ModFiles](Code/dge-metric-model/ModFiles), [Code/dge-metric-model/Functions](Code/dge-metric-model/Functions)
+- Agenda reference: [Agenda/detailed-agenda.md](Agenda/detailed-agenda.md)
+
+### Day 2 - Thursday, 23 July 2026
+
+Focus:
+- Morning: calibration and scenario hands-on (Session 2).
+- Afternoon: reserve requirements method and implementation planning (Session 3).
+
+Use these folders:
+- Calibration, scenario runs, and debugging: [Code/dge-metric-model](Code/dge-metric-model)
+- Reserve requirements method and training scripts: [Code/reserve-requirements](Code/reserve-requirements)
+- Reserve outputs and examples: [Code/reserve-requirements/run_outputs](Code/reserve-requirements/run_outputs)
+
+### Day 3 - Friday, 24 July 2026
+
+Focus:
+- Morning: guided open lab on reserve requirements (Session 4).
+- Afternoon: calibration internals, model modification, sensitivity analysis (Session 5).
+
+Use these folders:
+- Reserve-requirement lab work: [Code/reserve-requirements](Code/reserve-requirements)
+- Sensitivity and model modification practice: [Code/dge-metric-model](Code/dge-metric-model)
+- Slides and communication outputs: [slides](slides), [Code/reserve-requirements/Presentation](Code/reserve-requirements/Presentation)
+
+Source agenda document used for this mapping:
+- C:/Users/schul/Downloads/DGE-METRIC_Online_Training_Agenda_170726.docx
+
 ## Session Details
 
 ### Session 1 - Wed 22 Jul, 13:00-17:00

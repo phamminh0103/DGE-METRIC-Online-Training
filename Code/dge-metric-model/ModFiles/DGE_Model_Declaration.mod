@@ -184,11 +184,11 @@ PoP $PoP$ (long_name = 'population')
         @# endfor
     @# endif
 @# endfor
-;
+//;
 % ====================================
 % === Declare Exogenous Variables ===
 % ====================================
-varexo 
+varexo
 exo_rf ${\eta^{r^f}}$ (long_name = 'exogenous world interest rate')
 exo_beta ${\eta^{\beta}}$ (long_name = 'exogenous discount factor')
 

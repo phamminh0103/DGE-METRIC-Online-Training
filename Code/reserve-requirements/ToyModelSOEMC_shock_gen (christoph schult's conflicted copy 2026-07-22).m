@@ -40,7 +40,7 @@ if nargin < 5 || isempty(params_mc)
     params_mc = struct();
 end
 mc = struct();
-mc.sigma_nu = getf(params_mc, 'sigma_nu', 0.00);  % Std. dev. of iid price innovation nu_c
+mc.sigma_nu = getf(params_mc, 'sigma_nu', 0.02);  % Std. dev. of iid price innovation nu_c
 mc.p_dis    = getf(params_mc, 'p_dis',    0.04);  % Probability a new supply crisis starts in a period
 mc.p_end    = getf(params_mc, 'p_end',    0.20);  % Probability an ongoing crisis ends in a period
 mc.dis_lo   = getf(params_mc, 'dis_lo',   0.20);  % Minimum crisis depth as share of ED_c_bar
@@ -61,6 +61,7 @@ N_COMM = length(COMM);
 exo_mat = oo_.exo_simul;
 
 % Column indices for each exo variable
+idx_ea = find(strcmp(M_.exo_names, 'e_A'));
 idx_nu = zeros(1, N_COMM);
 idx_ed = zeros(1, N_COMM);
 for ci = 1:N_COMM

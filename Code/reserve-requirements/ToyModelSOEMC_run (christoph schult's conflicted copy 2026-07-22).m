@@ -12,7 +12,7 @@
 %       → WHY JOINT: phi_R*, phi_IQ*, and d* are interdependent (strategic complements)
 %          Sequential optimisation (MC then stock search) gives inconsistent results
 %          because the optimal drawdown policy depends on the stock size, and vice versa.
-%       → Storage cost (kappa_1_c*R + kappa_2_c*R^2) is in the resource constraint,
+%       → Storage cost (kappa_1_c*R_c + kappa_2_c*R_c^2) is in the resource constraint,
 %          so maximising E[W(phi_R, phi_IQ, d)] already nets out storage costs.
 %       → writes R_oil_bar*, R_coal_bar*, phi_R*, phi_IQ* to M_.params
 %
@@ -33,7 +33,7 @@ end
 % Top-level progress bar for long master run.
 wb_run = waitbar(0, 'ToyModelSOEMC: starting...');
 set(wb_run, 'Tag', 'ToyModelSOEMCRunWaitbar');
-wb_run_cleanup = onCleanup(@() delete(findall(0, 'Type', 'figure', 'Tag', 'ToyModelSOEMCRunWaitbar')));
+set(wb_run, 'HandleVisibility', 'off');
 
 % ----------------------------------------------------------------
 % Dynare path setup (Windows-friendly)
@@ -165,13 +165,13 @@ else
     fprintf('  phi_R = 0 vs phi_R = 1.0\n\n');
 end
 
-beta   = 0.97;    % Vietnam calibration
+beta   = 0.95;    % Vietnam calibration
 T_demo = 100;   % total simulation horizon for the demo
 
 % Perfect-foresight options for the demo
 options_pf        = options_;
 options_pf.periods = T_demo;
-PF_HOMOTOPY_STEPS = 1;   % Continuation steps for deterministic PF demo
+PF_HOMOTOPY_STEPS = 10;   % Continuation steps for deterministic PF demo
 
 % Set up a baseline exo_simul (all zeros = SS values)
 oo_demo_base  = perfect_foresight_setup(M_, options_pf, oo_);
@@ -223,6 +223,7 @@ for kk = 1:N_demo
     try
         [oo_run, ~] = ToyModelSOEMC_pf_homotopy_solve(M_, options_pf, oo_demo_base, exo_mat, PF_HOMOTOPY_STEPS);
         results_demo(kk).C      = extract_var(oo_run, M_, 'C');
+        results_demo(kk).Y      = extract_var(oo_run, M_, 'Y');
         results_demo(kk).EDS    = extract_var(oo_run, M_, 'E_D_service');
         for ci = 1:N_COMM
             c = COMM{ci};
@@ -230,13 +231,22 @@ for kk = 1:N_demo
             results_demo(kk).(['R_' c])     = extract_var(oo_run, M_, ['R_' c]);
             results_demo(kk).(['Rdraw_' c]) = extract_var(oo_run, M_, ['R_' c '_draw']);
         end
+        gdp_loss_pct_path = 100 * max(0, 1 - results_demo(kk).Y ./ Y_ss);
+        crisis_rows_valid = crisis_rows(crisis_rows <= numel(gdp_loss_pct_path));
+        results_demo(kk).gdp_loss_peak = max(gdp_loss_pct_path(crisis_rows_valid));
+        results_demo(kk).gdp_loss_avg  = mean(gdp_loss_pct_path(crisis_rows_valid));
         results_demo(kk).W  = compute_welfare(results_demo(kk).C, beta, T_WELFARE);
         results_demo(kk).ok = true;
     catch ME
         fprintf('  Scenario %d failed: %s\n', kk, ME.message);
         results_demo(kk).ok = false;
+        results_demo(kk).W  = NaN;
+        results_demo(kk).gdp_loss_peak = NaN;
+        results_demo(kk).gdp_loss_avg  = NaN;
     end
-    fprintf('  %s  |  W = %.4f\n', labels_demo{kk}, results_demo(kk).W);
+    fprintf('  %s  |  W = %.4f  |  GDP loss (peak/avg crisis) = %.2f%% / %.2f%%\n', ...
+            labels_demo{kk}, results_demo(kk).W, ...
+            results_demo(kk).gdp_loss_peak, results_demo(kk).gdp_loss_avg);
 end
 
 % Restore default phi_R
@@ -302,108 +312,6 @@ if N_demo > 0 && all([results_demo.ok])
         hold off;
     end
 end
-
-% ----------------------------------------------------------------
-% Step 3a: Commodity-specific GDP impact (oil vs coal shortages)
-%
-%   Uses the same deterministic crisis setup as Step 3, but isolates each
-%   commodity shock separately to compare macro impact on GDP (Y).
-% ----------------------------------------------------------------
-fprintf('\n=== STEP 3a: GDP Impact by Commodity Shortage (Oil vs Coal) ===\n');
-fprintf('  Deterministic 20-period supply shortfall: -30%% in one commodity at a time.\n');
-
-phi_R_gdp_demo = 0.5;  % Hold drawdown rule fixed to isolate commodity effect.
-M_.params(idx_phi_R) = phi_R_gdp_demo;
-
-GDP_BN_EUR = 500;
-eur_bn_per_model_unit = GDP_BN_EUR / Y_ss;
-
-gdp_cases = struct();
-gdp_cases(1).commodity = 'oil';
-gdp_cases(1).label     = 'Oil shortage only';
-gdp_cases(2).commodity = 'coal';
-gdp_cases(2).label     = 'Coal shortage only';
-
-N_gdp_cases = length(gdp_cases);
-results_gdp = struct();
-crisis_idx = T_start+1:T_end+1;
-
-for kk = 1:N_gdp_cases
-    c_shock = gdp_cases(kk).commodity;
-    exo_mat = exo_baseline;
-    exo_mat(crisis_rows, idx_ed.(c_shock)) = -0.3;
-
-    try
-        [oo_run, ~] = ToyModelSOEMC_pf_homotopy_solve(M_, options_pf, oo_demo_base, exo_mat, PF_HOMOTOPY_STEPS);
-        Y_path = extract_var(oo_run, M_, 'Y');
-        C_path = extract_var(oo_run, M_, 'C');
-
-        gdp_loss_pct = 100 * (Y_ss - Y_path) / Y_ss;
-        gdp_loss_bn  = (Y_ss - Y_path) * eur_bn_per_model_unit;
-
-        results_gdp(kk).Y = Y_path;
-        results_gdp(kk).C = C_path;
-        results_gdp(kk).loss_pct = gdp_loss_pct;
-        results_gdp(kk).loss_bn = gdp_loss_bn;
-        results_gdp(kk).peak_loss_pct = max(gdp_loss_pct(crisis_idx));
-        results_gdp(kk).avg_loss_pct  = mean(gdp_loss_pct(crisis_idx), 'omitnan');
-        results_gdp(kk).cum_loss_bn   = sum(gdp_loss_bn(crisis_idx), 'omitnan');
-        results_gdp(kk).ok = true;
-    catch ME
-        fprintf('  Scenario %s failed: %s\n', gdp_cases(kk).label, ME.message);
-        results_gdp(kk).ok = false;
-    end
-end
-
-fprintf('  GDP anchor for conversion: Y_ss = %.4f -> %.0f bn EUR\n', Y_ss, GDP_BN_EUR);
-for kk = 1:N_gdp_cases
-    if results_gdp(kk).ok
-        fprintf('  %-18s | peak loss = %6.2f%% | avg crisis loss = %6.2f%% | cumulative crisis loss = %8.2f bn EUR\n', ...
-            gdp_cases(kk).label, results_gdp(kk).peak_loss_pct, results_gdp(kk).avg_loss_pct, results_gdp(kk).cum_loss_bn);
-    end
-end
-fprintf('\n');
-
-if all([results_gdp.ok])
-    t_show_gdp = 1:min(60, T_demo);
-    colors_gdp = {[0.85 0.33 0.10], [0.00 0.45 0.74]};
-
-    figure('Name', 'Commodity-specific GDP Impact Demo', 'Position', [90 90 1050 420]);
-    sgtitle({'GDP impact by commodity-specific shortage (deterministic demo)', ...
-             sprintf('phi_R = %.2f, crisis periods %d-%d, GDP anchor %.0f bn EUR', ...
-                     phi_R_gdp_demo, T_start, T_end, GDP_BN_EUR)}, ...
-            'FontWeight', 'bold', 'FontSize', 11);
-
-    subplot(1,2,1); hold on; grid on;
-    yline(Y_ss, 'k--', 'LineWidth', 1, 'DisplayName', 'Steady state Y');
-    for kk = 1:N_gdp_cases
-        plot(t_show_gdp, results_gdp(kk).Y(t_show_gdp), 'LineWidth', 2, ...
-             'Color', colors_gdp{kk}, 'DisplayName', gdp_cases(kk).label);
-    end
-    xline(T_start+1, 'k--', 'LineWidth', 1, 'Label', 'Crisis start');
-    xline(T_end+2,   'k:',  'LineWidth', 1, 'Label', 'Crisis end');
-    title('GDP path  Y', 'FontWeight', 'bold');
-    xlabel('Period'); ylabel('Y (model units)');
-    legend('Location', 'southwest', 'FontSize', 8);
-    hold off;
-
-    subplot(1,2,2); hold on; grid on;
-    for kk = 1:N_gdp_cases
-        plot(t_show_gdp, results_gdp(kk).loss_bn(t_show_gdp), 'LineWidth', 2, ...
-             'Color', colors_gdp{kk}, ...
-             'DisplayName', sprintf('%s (peak %.2f%%)', gdp_cases(kk).label, results_gdp(kk).peak_loss_pct));
-    end
-    yline(0, 'k-', 'LineWidth', 1);
-    xline(T_start+1, 'k--', 'LineWidth', 1);
-    xline(T_end+2,   'k:',  'LineWidth', 1);
-    title('GDP loss vs steady state', 'FontWeight', 'bold');
-    xlabel('Period'); ylabel('Loss (bn EUR)');
-    legend('Location', 'northwest', 'FontSize', 8, 'Interpreter', 'none');
-    hold off;
-end
-
-% Restore default drawdown parameter after the commodity-impact demo.
-M_.params(idx_phi_R) = 0.5;
 
 % ----------------------------------------------------------------
 % Step 3b: Vietnam Growth Scenario
@@ -672,7 +580,7 @@ end
 %         (strategic complementarity: ES_c = E_D_c * (Q_c/Q_c_bar)^(1-alpha_Q))
 %
 %   METHOD: 3D Monte Carlo grid over (phi_R × phi_IQ × d)
-%     - Storage cost is already IN the resource constraint (kappa_1*R + kappa_2*R^2)
+%     - Storage cost is already IN the resource constraint (kappa_1_c*R_c + kappa_2_c*R_c^2)
 %       so it already reduces C in every simulation draw.
 %     - We simply maximise E[W(phi_R, phi_IQ, d)] over all three dimensions.
 %     - No separate lambda_cost subtraction needed — it would double-count.
@@ -706,8 +614,7 @@ fprintf('\n  WHY JOINT? phi_R* found at d_IEA differs from phi_R* found at d*.\n
 fprintf('  Larger stock → drawdown more sustainable → higher optimal phi_R.\n');
 fprintf('  Higher phi_IQ → reserves more effective (Q_c keeps pace) → higher d*.\n');
 
-if isgraphics(wb_run)
-    delete(wb_run);
-end
-
 fprintf('\n=== ToyModelSOEMC_run.m complete. ===\n');
+if isgraphics(wb_run)
+    close(wb_run);
+end

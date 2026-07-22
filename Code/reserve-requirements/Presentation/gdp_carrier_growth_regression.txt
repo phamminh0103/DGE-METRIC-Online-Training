@@ -1,0 +1,93 @@
+GDP growth vs. per-carrier energy consumption growth -- regression analysis
+Dependent variable: GDP growth (%, y/y, winsorized -- gdp_growth_pct_w)
+Independent variable: carrier's own consumption growth (%, y/y, winsorized
+per carrier -- carrier_growth_pct_w), interacted with share_lag = that
+carrier's share of TOTAL primary energy consumption in the PREVIOUS year.
+The interaction tests whether a carrier's growth matters more for GDP
+growth the larger its predetermined weight in the energy mix.
+========================================================================================
+
+Summary across carriers
+----------------------------------------------------------------------------------------
+Carrier           N   b(growth)  b(share_lag)  b(interaction)  p(interact)      R2
+oil            4043       0.252         2.248          -0.027        0.647   0.212
+gas            3563       0.022        -0.508           0.166        0.037   0.056
+coal           3654       0.009         0.996           0.377        0.000   0.072
+nuclear        1360       0.002        -4.519           0.314        0.000   0.034
+hydro          3501       0.007        -0.877           0.106        0.019   0.007
+renewables     3701       0.004        -1.615           0.102        0.020   0.007
+
+========================================================================================
+
+(1) oil -- gdp_growth_pct_w ~ carrier_growth_pct_w * share_lag
+    N = 4043, 78 countries, 1966-2023
+    Standard errors clustered by country
+----------------------------------------------------------------------------------------
+Variable                                  Coef     Std.Err           t           p
+Intercept                               1.8829      0.4101       4.591       0.000
+carrier_growth_pct_w                    0.2517      0.0367       6.856       0.000
+share_lag                               2.2484      0.7588       2.963       0.004
+carrier_growth_pct_w:share_lag         -0.0268      0.0584      -0.460       0.647
+
+R-squared: 0.2118   N: 4043
+
+(2) gas -- gdp_growth_pct_w ~ carrier_growth_pct_w * share_lag
+    N = 3563, 75 countries, 1966-2023
+    Standard errors clustered by country
+----------------------------------------------------------------------------------------
+Variable                                  Coef     Std.Err           t           p
+Intercept                               3.1830      0.3051      10.432       0.000
+carrier_growth_pct_w                    0.0220      0.0056       3.906       0.000
+share_lag                              -0.5081      1.0590      -0.480       0.633
+carrier_growth_pct_w:share_lag          0.1657      0.0779       2.128       0.037
+
+R-squared: 0.0555   N: 3563
+
+(3) coal -- gdp_growth_pct_w ~ carrier_growth_pct_w * share_lag
+    N = 3654, 76 countries, 1966-2023
+    Standard errors clustered by country
+----------------------------------------------------------------------------------------
+Variable                                  Coef     Std.Err           t           p
+Intercept                               3.1138      0.2247      13.858       0.000
+carrier_growth_pct_w                    0.0089      0.0023       3.914       0.000
+share_lag                               0.9959      1.0733       0.928       0.356
+carrier_growth_pct_w:share_lag          0.3774      0.0634       5.948       0.000
+
+R-squared: 0.0721   N: 3654
+
+(4) nuclear -- gdp_growth_pct_w ~ carrier_growth_pct_w * share_lag
+    N = 1360, 34 countries, 1966-2023
+    Standard errors clustered by country
+----------------------------------------------------------------------------------------
+Variable                                  Coef     Std.Err           t           p
+Intercept                               2.9666      0.4070       7.290       0.000
+carrier_growth_pct_w                    0.0021      0.0013       1.537       0.134
+share_lag                              -4.5189      2.1410      -2.111       0.042
+carrier_growth_pct_w:share_lag          0.3139      0.0800       3.923       0.000
+
+R-squared: 0.0337   N: 1360
+
+(5) hydro -- gdp_growth_pct_w ~ carrier_growth_pct_w * share_lag
+    N = 3501, 69 countries, 1966-2023
+    Standard errors clustered by country
+----------------------------------------------------------------------------------------
+Variable                                  Coef     Std.Err           t           p
+Intercept                               3.4549      0.2414      14.311       0.000
+carrier_growth_pct_w                    0.0073      0.0042       1.728       0.089
+share_lag                              -0.8773      0.8082      -1.086       0.282
+carrier_growth_pct_w:share_lag          0.1056      0.0439       2.403       0.019
+
+R-squared: 0.0068   N: 3501
+
+(6) renewables -- gdp_growth_pct_w ~ carrier_growth_pct_w * share_lag
+    N = 3701, 78 countries, 1966-2023
+    Standard errors clustered by country
+----------------------------------------------------------------------------------------
+Variable                                  Coef     Std.Err           t           p
+Intercept                               3.5245      0.2442      14.436       0.000
+carrier_growth_pct_w                    0.0045      0.0033       1.362       0.177
+share_lag                              -1.6147      0.7507      -2.151       0.035
+carrier_growth_pct_w:share_lag          0.1025      0.0431       2.375       0.020
+
+R-squared: 0.0067   N: 3701
+

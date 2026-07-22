@@ -200,6 +200,7 @@ if license('test', 'Distrib_Computing_Toolbox')
         parallel_days = false;
     end
 end
+parallel_cleanup = onCleanup(@() close_parallel_pool(parallel_days));
 
 if parallel_days
     fprintf('  Parallel mode: parfor over d-grid (%d workers).\n\n', gcp('nocreate').NumWorkers);
@@ -409,6 +410,12 @@ M_.params(idx_phi_R)  = phi_R_opt;
 oo_.steady_state = ys_opt;
 M_.params        = params_opt;
 
+% Unit conversion for reporting: map normalized model output to billion EUR.
+Y_ss_opt  = ys_opt(strcmp(M_.endo_names, 'Y'));
+GDP_BN_EUR = 500;
+eur_bn_per_model_unit = GDP_BN_EUR / Y_ss_opt;
+Cmean_opt_eur_bn = Cmean_opt * eur_bn_per_model_unit;
+
 % Store optimal policy in workspace for downstream scripts
 phi_R_star  = phi_R_opt;
 phi_IQ_star = phi_IQ_opt;
@@ -425,8 +432,7 @@ fprintf('                     R_oil_bar*  = %.4f  (annual model units)\n', R_oil
 fprintf('                     R_coal_bar* = %.4f  (annual model units)\n', R_coal_opt);
 fprintf('  Drawdown rule:     phi_R*  = %.2f\n', phi_R_opt);
 fprintf('  Capacity invest.:  phi_IQ* = %.2f\n', phi_IQ_opt);
-fprintf('  E[W] at optimum:    %.4f\n', EW_opt);
-fprintf('  mean(C) at optimum: %.4f\n', Cmean_opt);
+fprintf('  Mean consumption at optimum: %.2f bn EUR\n', Cmean_opt_eur_bn);
 fprintf('  composite score:    %.4f\n', objective_max);
 fprintf('\n  Interpretation:\n');
 fprintf('  The jointly optimal policy requires BOTH adequate reserves AND\n');
@@ -438,7 +444,6 @@ fprintf('  Reserve choice uses a 50/50 blend of normalized NPV and mean consumpt
 % SAVE RESULTS TO ONE CSV FILE
 % ----------------------------------------------------------------
 C_ss_opt     = ys_opt(strcmp(M_.endo_names, 'C'));
-Y_ss_opt     = ys_opt(strcmp(M_.endo_names, 'Y'));
 k1_oil       = M_.params(strcmp(M_.param_names, 'kappa_1_oil'));
 k2_oil       = M_.params(strcmp(M_.param_names, 'kappa_2_oil'));
 k1_coal      = M_.params(strcmp(M_.param_names, 'kappa_1_coal'));
@@ -447,12 +452,12 @@ cost_oil     = k1_oil  * R_oil_opt  + k2_oil  * R_oil_opt^2;
 cost_coal    = k1_coal * R_coal_opt + k2_coal * R_coal_opt^2;
 cost_pct     = (cost_oil + cost_coal) / C_ss_opt * 100;
 
-% Benefit vs zero-reserve baseline (compute E[W] at d=0 for reference)
 W_zero   = W_joint(1, ii_opt, 1);     % smallest d, phi_R=0 ≈ no-reserve benchmark
 C_zero   = Cmean_joint(1, ii_opt, 1);
 lambda_b = (exp((EW_opt - W_zero) * (1 - beta)) - 1) * 100;
 
-W_d_opt = squeeze(W_joint(:, ii_opt, jj_opt));   % welfare at optimal phi_R, phi_IQ for each d
+C_d_opt = squeeze(Cmean_joint(:, ii_opt, jj_opt));   % mean consumption at optimal phi_R, phi_IQ for each d
+C_d_opt_eur_bn = C_d_opt * eur_bn_per_model_unit;
 
 grid_d_days  = repelem(d_grid(:), numel(phi_R_grid) * numel(phi_IQ_grid));
 grid_phi_R   = repmat(repelem(phi_R_grid(:), numel(phi_IQ_grid)), numel(d_grid), 1);
@@ -473,13 +478,13 @@ grid_table = table(repmat("grid", numel(grid_W_mean), 1), grid_d_days, grid_phi_
                       'C_ss','Y_ss','R_oil_star','R_coal_star','R_oil_days','R_coal_days', ...
                       'EW_opt','EW_zero','storage_cost_pct','lambda_benefit_pct'});
 
-curve_table = table(repmat("welfare_curve", numel(W_d_opt), 1), d_grid(:), repmat(phi_R_opt, numel(W_d_opt), 1), ...
-    repmat(phi_IQ_opt, numel(W_d_opt), 1), W_d_opt, squeeze(Cmean_joint(:, ii_opt, jj_opt)), ...
-    squeeze(objective_joint(:, ii_opt, jj_opt)), NaN(numel(W_d_opt),1), NaN(numel(W_d_opt),1), false(numel(W_d_opt),1), ...
-    repmat(C_ss_opt, numel(W_d_opt), 1), repmat(Y_ss_opt, numel(W_d_opt), 1), repmat(R_oil_opt, numel(W_d_opt), 1), ...
-    repmat(R_coal_opt, numel(W_d_opt), 1), repmat(R_oil_opt / ED_c_bar.oil * 365, numel(W_d_opt), 1), ...
-    repmat(R_coal_opt / ED_c_bar.coal * 365, numel(W_d_opt), 1), repmat(EW_opt, numel(W_d_opt), 1), ...
-    repmat(W_zero, numel(W_d_opt), 1), repmat(cost_pct, numel(W_d_opt), 1), repmat(lambda_b, numel(W_d_opt), 1), ...
+curve_table = table(repmat("consumption_curve", numel(C_d_opt), 1), d_grid(:), repmat(phi_R_opt, numel(C_d_opt), 1), ...
+    repmat(phi_IQ_opt, numel(C_d_opt), 1), squeeze(W_joint(:, ii_opt, jj_opt)), C_d_opt, ...
+    squeeze(objective_joint(:, ii_opt, jj_opt)), NaN(numel(C_d_opt),1), NaN(numel(C_d_opt),1), false(numel(C_d_opt),1), ...
+    repmat(C_ss_opt, numel(C_d_opt), 1), repmat(Y_ss_opt, numel(C_d_opt), 1), repmat(R_oil_opt, numel(C_d_opt), 1), ...
+    repmat(R_coal_opt, numel(C_d_opt), 1), repmat(R_oil_opt / ED_c_bar.oil * 365, numel(C_d_opt), 1), ...
+    repmat(R_coal_opt / ED_c_bar.coal * 365, numel(C_d_opt), 1), repmat(EW_opt, numel(C_d_opt), 1), ...
+    repmat(W_zero, numel(C_d_opt), 1), repmat(cost_pct, numel(C_d_opt), 1), repmat(lambda_b, numel(C_d_opt), 1), ...
     'VariableNames', grid_table.Properties.VariableNames);
 
 summary_table = table("summary", d_opt, phi_R_opt, phi_IQ_opt, EW_opt, Cmean_opt, objective_max, NaN, N_MC_joint, true, ...
@@ -518,17 +523,17 @@ hold off;
 grid on;
 
 % ----------------------------------------------------------------
-% FIGURE 2: E[W] vs d at optimal (phi_R*, phi_IQ*)
+% FIGURE 2: Mean consumption vs d at optimal (phi_R*, phi_IQ*)
 %   Shows the reserve sizing dimension — how much stock matters.
 % ----------------------------------------------------------------
-figure('Name', 'Joint Optimal: Welfare vs Reserve Level', 'Position', [100 100 750 500]);
+figure('Name', 'Joint Optimal: Consumption vs Reserve Level', 'Position', [100 100 750 500]);
 
-W_d_curve = squeeze(W_joint(:, ii_opt, jj_opt));   % N_d vector at optimal policy
+C_d_curve = C_d_opt_eur_bn;   % N_d vector at optimal policy, billion EUR
 
-plot(d_grid, W_d_curve, '-o', 'Color', [0.18 0.44 0.71], 'LineWidth', 2.5, ...
+plot(d_grid, C_d_curve, '-o', 'Color', [0.18 0.44 0.71], 'LineWidth', 2.5, ...
      'MarkerFaceColor', [0.18 0.44 0.71], 'MarkerSize', 8);
 hold on;
-scatter(d_opt, EW_opt, 200, [0.13 0.60 0.33], 'filled', ...
+scatter(d_opt, Cmean_opt_eur_bn, 200, [0.13 0.60 0.33], 'filled', ...
         'MarkerEdgeColor', 'k', 'LineWidth', 1.5);
 xline(d_opt, '--', 'Color', [0.13 0.60 0.33], 'LineWidth', 2, ...
       'Label', sprintf('  d^* = %d days', d_opt));
@@ -539,15 +544,15 @@ xlim([0, 730]);
 hold off;
 
 xlabel('Days of import coverage  d', 'FontSize', 12);
-ylabel('Expected welfare  E[W]', 'FontSize', 12);
-title({sprintf('E[W] vs Reserve Level  at  \\phi_R^*=%.2f, \\phi_{IQ}^*=%.2f', ...
+ylabel('Mean consumption  E[C]  (billion EUR)', 'FontSize', 12);
+title({sprintf('Mean consumption vs Reserve Level  at  \phi_R^*=%.2f, \phi_{IQ}^*=%.2f', ...
                phi_R_opt, phi_IQ_opt), ...
-       'Storage cost is in resource constraint — E[W] is the correct criterion'}, ...
+    sprintf('GDP anchor: Y_{ss} = %.2f maps to %.0f bn EUR', Y_ss_opt, GDP_BN_EUR)}, ...
       'FontWeight', 'bold', 'FontSize', 12);
 grid on;
 
 % ----------------------------------------------------------------
-% FIGURE 3: E[W] vs d for all phi_R values at optimal phi_IQ*
+% FIGURE 3: Mean consumption vs d for all phi_R values at optimal phi_IQ*
 %   Shows interaction between stock level and drawdown policy.
 % ----------------------------------------------------------------
 figure('Name', 'Joint Optimal: Stock-Drawdown Interaction', 'Position', [120 120 800 500]);
@@ -555,22 +560,22 @@ figure('Name', 'Joint Optimal: Stock-Drawdown Interaction', 'Position', [120 120
 phi_R_colors = {[0.80 0.15 0.15], [0.18 0.44 0.71], [0.13 0.60 0.33]};
 hold on; grid on;
 for jj = 1:N_phi_R
-    W_curve_jj = squeeze(W_joint(:, ii_opt, jj));
-    plot(d_grid, W_curve_jj, '-o', 'Color', phi_R_colors{jj}, 'LineWidth', 2.2, ...
+    C_curve_jj = squeeze(Cmean_joint(:, ii_opt, jj)) * eur_bn_per_model_unit;
+    plot(d_grid, C_curve_jj, '-o', 'Color', phi_R_colors{jj}, 'LineWidth', 2.2, ...
          'MarkerFaceColor', phi_R_colors{jj}, 'MarkerSize', 7, ...
          'DisplayName', sprintf('\\phi_R = %.2f', phi_R_grid(jj)));
 end
 xline(d_opt, '--', 'Color', [0.13 0.60 0.33], 'LineWidth', 2, ...
       'Label', sprintf('  d^* = %d days', d_opt));
 xline(90, ':', 'Color', [0.5 0.5 0.5], 'LineWidth', 1.5, 'Label', '  IEA 90d');
-scatter(d_opt, EW_opt, 200, [0.13 0.60 0.33], 'filled', ...
+scatter(d_opt, Cmean_opt_eur_bn, 200, [0.13 0.60 0.33], 'filled', ...
         'MarkerEdgeColor', 'k', 'LineWidth', 1.5, 'HandleVisibility', 'off');
 hold off;
 
 xlabel('Days of import coverage  d', 'FontSize', 12);
-ylabel('Expected welfare  E[W]', 'FontSize', 12);
+ylabel('Mean consumption  E[C]  (billion EUR)', 'FontSize', 12);
 title({sprintf('Stock Level × Drawdown Policy  (at \\phi_{IQ}^* = %.2f)', phi_IQ_opt), ...
-       'Higher \\phi_R is more valuable when the stock is large enough to sustain drawdown'}, ...
+    sprintf('GDP anchor: Y_{ss} = %.2f maps to %.0f bn EUR', Y_ss_opt, GDP_BN_EUR)}, ...
       'FontWeight', 'bold', 'FontSize', 12);
 legend('Location', 'southeast', 'FontSize', 11);
 
@@ -579,6 +584,15 @@ fprintf('=== Joint optimal policy analysis complete. ===\n\n');
 function close_progress_bar(progress_bar)
 if ~isempty(progress_bar) && isvalid(progress_bar)
     delete(progress_bar);
+end
+end
+
+function close_parallel_pool(parallel_days)
+if parallel_days
+    p = gcp('nocreate');
+    if ~isempty(p)
+        delete(p);
+    end
 end
 end
 

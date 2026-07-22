@@ -2,23 +2,51 @@
 
 ## Your worksheet — the target, blank
 
-Copy this onto paper before reading further.
+This is what you are building. Copy the worksheet table onto paper or into a spreadsheet now,
+before reading anything else. Every cell starts blank; each Part of this problem set tells you
+exactly how to fill it in until it is complete.
 
-### Per-scenario worksheet (fill in one row per scenario)
+### Worksheet by year (all exogenous shocks in the header)
 
-| Scenario | Public rate wedge (`exo_r_G_3_1`) | FDI rate wedge (`exo_r_FDI_3_1`) | Public capital-share target (`exo_sIGShare_3_1`) | FDI capital-share target (`exo_sFDIShare_3_1`) |
-|---|---|---|---|---|
-| A — Balanced | | | | |
-| B — Market-led | | | | |
-| C — Public-led | | | | |
+Fill this as one sheet for one selected scenario (A, B, or C). The four wedge/share-target
+columns are constants for your chosen scenario, while the three switch columns follow the year
+rule shown below.
 
-### The remaining columns (same rule for every scenario — fill in now, no calculation needed)
+| Year | Calendar | Public rate wedge (`exo_r_G_3_1`) | FDI rate wedge (`exo_r_FDI_3_1`) | Public capital-share target (`exo_sIGShare_3_1`) | FDI capital-share target (`exo_sFDIShare_3_1`) | Public-share switch (`exo_lIGShare_3_1`) | FDI-share switch (`exo_lFDIShare_3_1`) | Cap-trade switch (`exo_CapTrade_1`) |
+| ---- | -------- | ----------------------------------- | ---------------------------------- | -------------------------------------------------- | ------------------------------------------------ | ------------------------------------------ | ---------------------------------------- | ------------------------------------- |
+| 1    | 2026     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 2    | 2027     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 3    | 2028     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 4    | 2029     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 5    | 2030     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 6    | 2031     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 7    | 2032     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 8    | 2033     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 9    | 2034     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 10   | 2035     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 11   | 2036     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 12   | 2037     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 13   | 2038     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 14   | 2039     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 15   | 2040     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 16   | 2041     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 17   | 2042     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 18   | 2043     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 19   | 2044     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 20   | 2045     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 21   | 2046     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 22   | 2047     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 23   | 2048     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 24   | 2049     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
+| 25   | 2050     |                                     |                                    |                                                    |                                                  |                                            |                                          |                                       |
 
-| | Every year except the last | The very last year of the simulation |
-|---|---|---|
-| `exo_lIGShare_3_1` | | |
-| `exo_lFDIShare_3_1` | | |
-| `exo_CapTrade_1` | | *(same value both columns)* |
+### Quick fill rule for the switch sheet
+
+| Variable              | Every year except the last | The very last year of the simulation |
+| --------------------- | -------------------------- | ------------------------------------ |
+| `exo_lIGShare_3_1`  | 1                          | 0                                    |
+| `exo_lFDIShare_3_1` | 1                          | 0                                    |
+| `exo_CapTrade_1`    | 1                          | 1                                    |
 
 *(Hint for the switch columns' right-hand column: both switches do the same thing in the final
 year, and it isn't "repeat last year's value." `exo_CapTrade_1` has no such exception — one value
@@ -42,14 +70,14 @@ Below is a small, made-up (not the real Vietnam numbers) financing-instrument ta
 scenarios. Unlike the EE pathway's dataset, this one has **no years at all** — every number here is
 a single, one-off assumption that then applies unchanged for the whole simulation.
 
-| Instrument | Routed to | A share | A rate | B share | B rate | C share | C rate |
-|---|---|---|---|---|---|---|---|
-| Concessional loans | public | 10% | 2.0% | 5% | 2.0% | 20% | 1.5% |
-| Green bonds (public) | public | 15% | 4.0% | 10% | 4.5% | 25% | 3.5% |
-| FDI equity | FDI | 12% | 6.0% | 15% | 6.5% | 10% | 5.5% |
-| FDI corporate bonds | FDI | 8% | 7.0% | 10% | 7.5% | 5% | 6.5% |
-| Bank credit | *residual* | 55% | 8.0% | 60% | 8.5% | 40% | 7.5% |
-| **Total** | | **100%** | | **100%** | | **100%** | |
+| Instrument           | Routed to    | A share        | A rate | B share        | B rate | C share        | C rate |
+| -------------------- | ------------ | -------------- | ------ | -------------- | ------ | -------------- | ------ |
+| Concessional loans   | public       | 10%            | 2.0%   | 5%             | 2.0%   | 20%            | 1.5%   |
+| Green bonds (public) | public       | 15%            | 4.0%   | 10%            | 4.5%   | 25%            | 3.5%   |
+| FDI equity           | FDI          | 12%            | 6.0%   | 15%            | 6.5%   | 10%            | 5.5%   |
+| FDI corporate bonds  | FDI          | 8%             | 7.0%   | 10%            | 7.5%   | 5%             | 6.5%   |
+| Bank credit          | *residual* | 55%            | 8.0%   | 60%            | 8.5%   | 40%            | 7.5%   |
+| **Total**      |              | **100%** |        | **100%** |        | **100%** |        |
 
 We'll also use a simplified benchmark rate `rf0_p = 10%` throughout this exercise (the real model
 uses ≈10.26%, derived from two other model parameters — the arithmetic below works the same way
@@ -102,11 +130,11 @@ exo_r_G_3_1 (A) = 0.0648 − 0.10 = −0.0352
 
 Now do B and C yourself. Answers:
 
-| Scenario | WACF | `exo_r_G_3_1` |
-|---|---|---|
-| A | 6.48% | **−0.0352** |
-| B | 7.375% | **−0.02625** |
-| C | 5.05% | **−0.0495** |
+| Scenario | WACF   | `exo_r_G_3_1`     |
+| -------- | ------ | ------------------- |
+| A        | 6.48%  | **−0.0352**  |
+| B        | 7.375% | **−0.02625** |
+| C        | 5.05%  | **−0.0495**  |
 
 Notice the wedge is **negative in every scenario** — every blended rate here is well below the 10%
 benchmark, so public capital always ends up cheaper than the model's default cost of capital. Also
@@ -140,11 +168,11 @@ exo_r_FDI_3_1 (A) = 0.064 − 0.10 = −0.036
 
 B and C:
 
-| Scenario | FDI-only weighted rate | `exo_r_FDI_3_1` |
-|---|---|---|
-| A | 6.4% | **−0.036** |
-| B | 6.9% | **−0.031** |
-| C | 5.833% | **−0.04167** |
+| Scenario | FDI-only weighted rate | `exo_r_FDI_3_1`   |
+| -------- | ---------------------- | ------------------- |
+| A        | 6.4%                   | **−0.036**   |
+| B        | 6.9%                   | **−0.031**   |
+| C        | 5.833%                 | **−0.04167** |
 
 ## Part 4 — Computing the capital-share targets
 
@@ -162,10 +190,10 @@ Compute both share targets for all three scenarios.
 ### Solution — Exercise 4
 
 | Scenario | `exo_sIGShare_3_1` (public) | `exo_sFDIShare_3_1` (FDI) |
-|---|---|---|
-| A | 0.10+0.15 = **0.25** | 0.12+0.08 = **0.20** |
-| B | 0.05+0.10 = **0.15** | 0.15+0.10 = **0.25** |
-| C | 0.20+0.25 = **0.45** | 0.10+0.05 = **0.15** |
+| -------- | ----------------------------- | --------------------------- |
+| A        | 0.10+0.15 =**0.25**     | 0.12+0.08 =**0.20**   |
+| B        | 0.05+0.10 =**0.15**     | 0.15+0.10 =**0.25**   |
+| C        | 0.20+0.25 =**0.45**     | 0.10+0.05 =**0.15**   |
 
 These two numbers, together with the rate wedges from Parts 2–3, are the *entire* description of a
 financing scenario — one snapshot, not a time series.

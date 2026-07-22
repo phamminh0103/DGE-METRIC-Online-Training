@@ -54,7 +54,7 @@ scenarioGroups.ImportShock = {...
 
 % Select which groups to run.
 % Default group set:
-activeScenarioGroups = {'Reference', 'EE', 'GF_PDP8', 'GF_NZ', 'NZ_Sensitivity', 'ImportShock'};
+activeScenarioGroups = {'Reference', 'EE'};%, 'EE', 'GF_PDP8', 'GF_NZ', 'NZ_Sensitivity', 'ImportShock'};
 
 % Optional override via environment variable, e.g.:
 %   set DGE_SCENARIO_GROUPS=Reference,GF_NZ

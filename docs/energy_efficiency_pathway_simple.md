@@ -442,4 +442,10 @@ contributed.
 
 *(Note: in the real model, every number you computed above gets added on top of a non-zero
 baseline value for that year and column — we set the baseline to zero throughout this exercise
-purely to keep the arithmetic focused on the two recipes themselves.)*
+purely to keep the arithmetic focused on the two recipes themselves. That baseline value is itself
+not just a flat trend: for the industry/services productivity shocks and their public
+EE-investment values, the real Baseline workbook builds it from actual Vietnam rooftop-solar
+deployment plans and the VNEEP3 policy program, using the same two recipes taught here — a PV
+coverage share run through Recipe A, and an RTS deployment index applied to Recipe B — before any
+EE *scenario* number gets added on top. See `docs/energy_efficiency_pathway.md`, "Where the
+Baseline's own EE/RTS numbers come from," for the full mechanism.)*

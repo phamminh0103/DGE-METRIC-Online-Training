@@ -166,8 +166,8 @@ Then do the same for **Services**, Year 1, Year 4, and Year 6.
 | Year | Industry saving % | Industry shock `exo_AI_4_1_2` = ln(1/(1−saving)) | Services saving % | Services shock `exo_AI_5_1_2` |
 |---|---|---|---|---|
 | 1 | 2% | ln(1/0.98) = **0.0202** | 3% | ln(1/0.97) = **0.0305** |
-| 4 | 5% | ln(1/0.95) = **0.051** | 9% | ln(1/0.91) = **0.0943** |
-| 6 | 10% | ln(1/0.10) = **0.101** | 12% | ln(1/0.88) = **0.1278** |
+| 4 | 6% | ln(1/0.94) = **0.06** | 9% | ln(1/0.91) = **0.0943** |
+| 6 | 12% | ln(1/0.88) = **0.12** | 12% | ln(1/0.88) = **0.1278** |
 
 Notice: Industry's saving % is only ~1.7× Services' in every year, but Industry's *shock* is more
 than 1.7× Services' shock (e.g. Year 6: 0.223 vs 0.128, a ratio of 1.7 — check a smaller/larger pair
